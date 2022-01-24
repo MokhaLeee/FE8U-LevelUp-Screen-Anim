@@ -1,0 +1,33 @@
+#include "EAstdlib.event"
+#include "Extensions/Hack Installation.txt"
+#include "Tools/Tool Helpers.txt"
+#include _6CDefinitions.event
+
+
+
+ORG $B2A610
+#include "LevelUpAnim/LevelUpAnim.event"
+
+ORG	$2C5AC
+BYTE $64 $20	//Exp=100
+
+
+/* 
+AnimOff:
+	gProc_MapAnimBattle: $89A3508
+->	MapAnimProc_DisplayExpBar: $807AA4C
+->	gProc_MapAnim_ExpBar: $89A36F8
+-> 	MapAnimExpBar_StartLevelUp: 0x807C211
+->	MapAnim_StartLevelUp: 0x807F10D
+->	gProc_MapAnimLevelUp: 0x89A3F74
+
+
+AnimOn
+	ekrBattle_CheckForLevelup_8050C34: 0x8050C35
+	NewEkrLevelup: 0x8073989
+->	gProc_ekrLevelup: 0x875932C
+
+
+*/
+	
+	

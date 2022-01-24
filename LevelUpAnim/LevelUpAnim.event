@@ -1,0 +1,53 @@
+#ifndef LEVEL_UP_ANIM
+#define LEVEL_UP_ANIM
+
+/* 
+enum{
+	STAT_NAME_LV  = 0,
+	STAT_NAME_EXP = 1,
+	STAT_NAME_HP  = 2,
+	STAT_NAME_STR = 3,
+	STAT_NAME_MAG = 4,
+	STAT_NAME_SKL = 5,
+	STAT_NAME_SPD = 6,
+	STAT_NAME_DEF = 7,
+	STAT_NAME_RES = 8,
+	STAT_NAME_LCK = 9,
+	STAT_NAME_CON = 10
+};
+
+static u32 const StatNames[]={
+	0x4E7, // Lv
+	0x4E8, // Exp
+	0x4E9, // HP
+	0x4FE, // Str
+	0x4FF, // Mag
+	0x4EC, // Skill
+	0x4ED, // Spd
+	0x4EF, // Def
+	0x4F0, // Res
+	0x4EE, // Luck
+	0x4F7  // Con
+}; 
+*/
+
+ALIGN 4
+StatNames:
+	SHORT 0x4E7 // Lv
+	SHORT 0x4E8 // Exp
+	SHORT 0x4E9 // HP
+	SHORT 0x4FE // Str
+	SHORT 0x4FF // Mag
+	SHORT 0x4EC // Skill
+	SHORT 0x4ED // Spd
+	SHORT 0x4EF // Def
+	SHORT 0x4F0 // Res
+	SHORT 0x4EE // Luck
+	SHORT 0x4F7 // Con
+
+
+#include AnimOff.event
+#include AnimOn.event
+
+
+#endif // LEVEL_UP_ANIM

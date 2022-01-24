@@ -1,0 +1,56 @@
+
+#include "src/AnimOff.lyn.event"
+	
+
+/* 	
+
+struct WindowSet_AnimOff{
+	u8 x;
+	u8 y;
+	u32* StringID0;
+	u32* StringID1;
+};
+
+
+static const struct WindowSet_AnimOff gMapAnimLevelUpStatLabelLocationTable[] = {
+	{ 9, 0, &StatNames[STAT_NAME_LV],  &StatNames[STAT_NAME_LV]  },
+	{ 1, 4, &StatNames[STAT_NAME_HP],  &StatNames[STAT_NAME_HP]  },
+	{ 1, 6, &StatNames[STAT_NAME_STR], &StatNames[STAT_NAME_MAG] },
+	{ 1, 8, &StatNames[STAT_NAME_SKL], &StatNames[STAT_NAME_SKL] },
+	{ 1,10, &StatNames[STAT_NAME_SPD], &StatNames[STAT_NAME_SPD] },
+	{ 9, 4, &StatNames[STAT_NAME_LCK], &StatNames[STAT_NAME_LCK] },
+	{ 9, 6, &StatNames[STAT_NAME_DEF], &StatNames[STAT_NAME_DEF] },
+	{ 9, 8, &StatNames[STAT_NAME_RES], &StatNames[STAT_NAME_RES] },
+	{ 9,10, &StatNames[STAT_NAME_CON], &StatNames[STAT_NAME_CON] },
+}; 
+*/
+#define ANIME_OFF_STAT_NAME_LV 		0*4 + StatNames
+#define ANIME_OFF_STAT_NAME_EXP 	1*4 + StatNames
+#define ANIME_OFF_STAT_NAME_HP  	2*4 + StatNames
+#define ANIME_OFF_STAT_NAME_STR 	3*4 + StatNames
+#define	ANIME_OFF_STAT_NAME_MAG 	4*4 + StatNames
+#define ANIME_OFF_STAT_NAME_SKL 	5*4 + StatNames
+#define ANIME_OFF_STAT_NAME_SPD 	6*4 + StatNames
+#define ANIME_OFF_STAT_NAME_DEF 	7*4 + StatNames
+#define ANIME_OFF_STAT_NAME_RES 	8*4 + StatNames
+#define ANIME_OFF_STAT_NAME_LCK 	9*4 + StatNames
+#define ANIME_OFF_STAT_NAME_CON 	10*4 + StatNames
+
+#define WindowSet_AnimOff(x, y, pstr0, pstr1)	"BYTE x y 0 0; POIN pstr0 pstr1"
+
+
+ALIGN 4
+gMapAnimLevelUpStatLabelLocationTable:
+	WindowSet_AnimOff($9, $0, ANIME_OFF_STAT_NAME_LV,  ANIME_OFF_STAT_NAME_LV)
+	WindowSet_AnimOff($1, $4, ANIME_OFF_STAT_NAME_HP,  ANIME_OFF_STAT_NAME_HP)
+	WindowSet_AnimOff($1, $6, ANIME_OFF_STAT_NAME_STR, ANIME_OFF_STAT_NAME_MAG)
+	WindowSet_AnimOff($1, $8, ANIME_OFF_STAT_NAME_SKL, ANIME_OFF_STAT_NAME_LV)
+	WindowSet_AnimOff($1, $A, ANIME_OFF_STAT_NAME_SPD, ANIME_OFF_STAT_NAME_SPD)
+	WindowSet_AnimOff($9, $4, ANIME_OFF_STAT_NAME_LCK, ANIME_OFF_STAT_NAME_LCK)
+	WindowSet_AnimOff($9, $6, ANIME_OFF_STAT_NAME_DEF, ANIME_OFF_STAT_NAME_DEF)
+	WindowSet_AnimOff($9, $8, ANIME_OFF_STAT_NAME_RES, ANIME_OFF_STAT_NAME_RES)
+	WindowSet_AnimOff($9, $A, ANIME_OFF_STAT_NAME_CON, ANIME_OFF_STAT_NAME_CON)
+	WORD 0xFFFF 0 0
+	
+	
+	
