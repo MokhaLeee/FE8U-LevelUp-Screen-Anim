@@ -3,8 +3,14 @@
 #include "level-up.h"
 
 
+extern const u8 gGfx_LevelUpBoxFrame[]; // 0x88035B0
+extern const u8 gMap_LevelUpBoxFrame[]; // 0x88039E8
+extern const u8 gPal_LevelUpBoxFrame[]; // 0x8803B10
 
-
+s8 MapAnimLevelUp_GetActorStatBase(s16 actor_id, int stat_id);
+s8 MapAnimLevelUp_GetActorStatUp(s16 actor_id, int stat_id);
+void MapAnimLevelUp_DrawActorStat(int actor_id, int base_x, int base_y,int stat_id,int BoolUp);
+void MapAnimLevelUp_InitLevelUpBox(s16 actor_id, u8 x, u8 y);
 
 
 // ====================
@@ -13,6 +19,8 @@
 
 // 0x807F1AD
 void MapAnimLevelUpProc_InitLevelUpBox(Proc_MapAnimLevelUp_t* proc){
+	
+	extern void sub_807EDF8(u16, u16, u16, Proc_MapAnimLevelUp_t*);
 	
 	Text_ResetTileAllocation();
 	BG_Fill(gBG0TilemapBuffer,0);
@@ -74,6 +82,8 @@ void MapAnimLevelUp_PutWindowOnScreen(Proc_MapAnimLevelUp_t* proc){
 
 // sub_807F39C
 void MapAnimLevelUp_MainAnime(Proc_MapAnimLevelUp_t* proc){
+	
+	extern void sub_807EE84(s16 x, s16 y,int stat_id,s8 stat_up); // Draw AP
 	
 	int stat_id;
 	
@@ -274,20 +284,3 @@ void MapAnimLevelUp_DrawActorStat(int actor_id, int base_x, int base_y,int stat_
 }
 
 
-
-
-
-
-// ===================
-// == FIT FOR C-LIB ==
-// ===================
-
-void sub_807F30C(Proc_MapAnimLevelUp_t* proc){
-	MapAnimLevelUp_PutWindowOnScreen(proc);
-}
-void sub_807F39C(Proc_MapAnimLevelUp_t* proc){
-	MapAnimLevelUp_MainAnime(proc);
-}
-void sub_807F354(Proc_MapAnimLevelUp_t* proc){
-	MapAnimLevelUp_PutWindowOffScreen(proc);
-}

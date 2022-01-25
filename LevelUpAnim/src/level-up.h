@@ -59,16 +59,10 @@ struct WindowSet_AnimOff{
 };
 
 extern const struct WindowSet_AnimOff gMapAnimLevelUpStatLabelLocationTable[];
-extern const u8 gGfx_LevelUpBoxFrame[]; // 0x88035B0
-extern const u8 gMap_LevelUpBoxFrame[]; // 0x88039E8
-extern const u8 gPal_LevelUpBoxFrame[]; // 0x8803B10
 
-s8 MapAnimLevelUp_GetActorStatBase(s16 actor_id, int stat_id);
-s8 MapAnimLevelUp_GetActorStatUp(s16 actor_id, int stat_id);
-void MapAnimLevelUp_DrawActorStat(int actor_id, int base_x, int base_y,int stat_id,int BoolUp);
-void sub_807EE84(s16 x, s16 y,int stat_id,s8 stat_up); // Draw AP
-void MapAnimLevelUp_InitLevelUpBox(s16 actor_id, u8 x, u8 y);
-void sub_807EDF8(u16, u16, u16, Proc_MapAnimLevelUp_t*);
+
+
+
 
 
 
@@ -99,6 +93,3 @@ struct Proc_EkrLevelUp{ // LevelUpScreen
 
 typedef struct Proc_EkrLevelUp Proc_EkrLevelUp_t;
 
-// Ekr_LocCalc
-int sub_8012DCC(int cases, int b, int c, int d, int e);
-int Ekr_LocCalc(int cases, int b, int c, int d, int e);

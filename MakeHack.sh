@@ -2,13 +2,13 @@ base_dir=$(dirname "$(readlink -f "$0")")
 
 main_event="$base_dir/Buildfile.event"
 source_rom="$base_dir/FE8U.gba"
-target_rom="$base_dir/FE8_LevelUpScrren.gba"
+target_rom="$base_dir/FE8_LevelUpScreen.gba"
 ea_core="$base_dir/Tools/EventAssembler/ColorzCore.exe"
 
 
 cd "$base_dir"
 make clean
-make all
+make lyn
 
 
 

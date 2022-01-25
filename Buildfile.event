@@ -1,9 +1,4 @@
-#include "EAstdlib.event"
 #include "Extensions/Hack Installation.txt"
-#include "Tools/Tool Helpers.txt"
-#include _6CDefinitions.event
-
-
 
 ORG $B2A610
 #include "LevelUpAnim/LevelUpAnim.event"

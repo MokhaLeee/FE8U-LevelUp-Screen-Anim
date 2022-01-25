@@ -3,12 +3,15 @@
 #include "level-up.h"
 
 
-static u16* gLevelUpStats = ((u16*)0x2020110);
-extern u16 gLevelUpStatsBase[]; // 0x2020114
-extern u16 gLevelUpStatsAfter[]; // 0x2020124
+static u16* gLevelUpStats = (u16*)0x2020110;
+static u16* gLevelUpStatsBase = (u16*)0x2020114;
+static u16* gLevelUpStatsAfter= (u16*)0x2020124;
 
-static struct BattleUnit** gpSomeBuStruct = (struct BattleUnit**)0x2020108;
-extern struct BattleUnit** gpSomeUnitStruct2;
+static u16 *ekrlu_class_window_offset = (u16*) 0x2020134;
+static u16 *ekrlu_status_window_offset = (u16*) 0x2020136;
+// static u16 **ekrlu_class_window_offset_at = (u16**) 0x201FB34;
+// static u16 **ekrlu_status_window_offset_at = (u16**) 0x201FDC0;
+
 extern struct BattleUnit* gpUnitLeft_BattleStruct[];
 extern struct BattleUnit* gpUnitRight_BattleStruct[];
 
@@ -23,10 +26,10 @@ extern const u16 gAnimsOnLevelUpStatDisplayPositionLookup[];
 
 // 0x8073E8C
 void EkrLevelUpProc_PutWindowOnScreen(Proc_EkrLevelUp_t* proc){
-	static u16 *short_2020134 = (u16*) 0x2020134;
-	static u16 *short_2020136 = (u16*) 0x2020136;
 	extern u16 gUnknown_020165C8[];
 	extern void sub_80712B0(void*, int, int, u16);
+	extern int Ekr_CommonCalc(u32 cases, int b, int c, int d, int e);
+	extern int LocCalc_0(u32 cases, int b, int c, int d, int e);
 	
 	int unk_44 = proc->unk_44;
 	int unk_48 = proc->unk_48;
@@ -60,14 +63,22 @@ void EkrLevelUpProc_PutWindowOnScreen(Proc_EkrLevelUp_t* proc){
 	proc->unk_4C++;
 	proc->unk_50++;
 	
-	// Ekr_LocCalc
-	calc0 = Ekr_LocCalc(0, -0x50, 0, unk_44, 8);
-	calc1 = Ekr_LocCalc(0, 0, 8, unk_48 , 8);
-	*short_2020134 = Ekr_LocCalc(0, 0x90, 0, unk_4C, 8);
-	*short_2020136 = Ekr_LocCalc(0, 0x90, 0, unk_50, 8);
+	// Ekr_CommonCalc
+	calc0 = LocCalc_0(0, -0x50, 0, unk_44, 8);
+	calc1 = LocCalc_0(0, 0, 8, unk_48 , 8);
+	
+	// determin class/lv window location
+	// see more on AnimOn-HBlank
+	*ekrlu_class_window_offset = LocCalc_0(0, 0x90, 0, unk_4C, 8);
+	
+	// determin status window location
+	*ekrlu_status_window_offset = LocCalc_0(0, 0x90, 0, unk_50, 8);
 	
 	gpFaceProcs->yPosition = 0x50 - calc0;
+	
+	// Ensure BackGround Palette
 	CpuFastSet(gUnknown_020165C8, gPaletteBuffer, 0x100);
+	
 	sub_80712B0(gPaletteBuffer, 2, 4, calc1);
 	sub_80712B0(gPaletteBuffer, 0x13, 0xC, calc1);
 	EnablePaletteSync();
@@ -83,18 +94,19 @@ void EkrLevelUpProc_PutWindowOnScreen(Proc_EkrLevelUp_t* proc){
 
 // 0x80742f9
 void EkrLevelUpProc_PutWindowOffScreen(Proc_EkrLevelUp_t *proc){
-	static u16 *short_2020134 = (u16*) 0x2020134;
-	static u16 *short_2020136 = (u16*) 0x2020136;
+	
 	extern u16 gUnknown_020165C8[];
 	extern void sub_80712B0(void*, int, int, u16);
+	int Ekr_CommonCalc(u32 cases, int b, int c, int d, int e);
+	int LocCalc_0(u32 cases, int b, int c, int d, int e);
 	
 	int calc2, calc3;
 	
-	// Ekr_LocCalc
-	*short_2020134 = Ekr_LocCalc(0,0,0x90, proc->cnt, 8);
-	*short_2020136 = Ekr_LocCalc(0,0,0x90, proc->cnt, 8);
-	calc2 = Ekr_LocCalc(0,0, -0x50, proc->cnt, 8);
-	calc3 = Ekr_LocCalc(0,8,0,proc->cnt,8);
+	// Ekr_CommonCalc
+	*ekrlu_class_window_offset = LocCalc_0(0,0,0x90, proc->cnt, 8);
+	*ekrlu_status_window_offset = LocCalc_0(0,0,0x90, proc->cnt, 8);
+	calc2 = LocCalc_0(0,0, -0x50, proc->cnt, 8);
+	calc3 = LocCalc_0(0,8,0,proc->cnt,8);
 	
 	gpFaceProcs->yPosition = 0x50 - calc2;
 	CpuFastSet(gUnknown_020165C8, gPaletteBuffer, 0x100);
@@ -116,9 +128,9 @@ void EkrLevelUpProc_PutWindowOffScreen(Proc_EkrLevelUp_t *proc){
 
 // 0x80741CC
 void EkrLevelUpProc_MainAnime(Proc_EkrLevelUp_t* proc){
-	extern void sub_80738B8(Proc_EkrLevelUp_t*, s16); // EkrLevelUp_DrawNewStat
+	extern void EkrLevelUp_DrawNewStat(Proc_EkrLevelUp_t*, s16);
 	extern void SomePlaySound_8071990(int ,int);
-	extern void sub_8071AB0(int,int,int);
+	static void (*sub_8071AB0)(int,int,int) = (const void*)0x8071AB1;
 	static void (*EkrLevelUp_SomeAPs)(int,int,int,int,int,int) = (const void*)(0x8074D58+1);
 	static u16 *short_203E1B0 = (u16*)0x203E1B0;
 	
@@ -145,7 +157,7 @@ void EkrLevelUpProc_MainAnime(Proc_EkrLevelUp_t* proc){
 	
 	// draw Stat Core
 	gLevelUpStatsBase[stat_id] = gLevelUpStatsAfter[stat_id];
-	sub_80738B8(proc, stat_id); // EkrLevelUp_DrawNewStat
+	EkrLevelUp_DrawNewStat(proc, stat_id);
 	
 	// SomeSound
 	SomePlaySound_8071990(0x76, 0x100);
@@ -198,6 +210,8 @@ void EkrLevelUpProc_MainAnime(Proc_EkrLevelUp_t* proc){
 void EkrLevelUp_InitStatsAndPutText(Proc_EkrLevelUp_t *proc){
 	
 	// stat name tables
+	static struct BattleUnit** gpSomeBuStruct = (struct BattleUnit**)0x2020108;
+	static struct BattleUnit** gpSomeUnitStruct2 = (struct BattleUnit**)0x202010C;
 	extern const u16* gUnknown_0875930C[];
 	extern const u16* gUnknown_087592EC[];
 	
@@ -206,9 +220,6 @@ void EkrLevelUp_InitStatsAndPutText(Proc_EkrLevelUp_t *proc){
 	extern struct TextHandle gSomeTextStruct[];
 	
 	struct BattleUnit *bu1, *bu2;
-	struct TextHandle *th;
-	u16 *map;
-	const char *str;
 	
 	if ( proc->gAISMain ){
 		bu1 = *gpUnitRight_BattleStruct;
@@ -284,15 +295,15 @@ void EkrLevelUp_InitStatsAndPutText(Proc_EkrLevelUp_t *proc){
 		else
 			stat_name_table = gUnknown_0875930C;
 		
-		str = GetStringFromIndex( *stat_name_table[stat_id] );
-		th = &gSomeTextStruct[stat_id];
+		const char *str = GetStringFromIndex( *stat_name_table[stat_id] );
+		struct TextHandle *th = &gSomeTextStruct[stat_id];
 		
 		Text_Init(th, 3);
 		Text_SetXCursor(th, 0);
 		Text_SetColorId(th, TEXT_COLOR_GOLD);
 		Text_AppendString(th, str);
 		
-		map = 
+		u16 *map = 
 			gBG2TilemapBuffer+
 			gAnimsOnLevelUpStatDisplayPositionLookup[stat_id];
 			
@@ -302,13 +313,13 @@ void EkrLevelUp_InitStatsAndPutText(Proc_EkrLevelUp_t *proc){
 	
 	for(int stat_id = 0; stat_id<8; stat_id++)
 	{
-		th = &gUnknown_020176A0[stat_id];
+		struct TextHandle *th = &gUnknown_020176A0[stat_id];
 		Text_Init(th, 2);
 		Text_SetXCursor(th, 8);
 		Text_SetColorId(th, TEXT_COLOR_BLUE);
 		Text_AppendDecNumber(th, gLevelUpStatsBase[stat_id]);
 		
-		map = 
+		u16 *map = 
 			6/2+
 			gBG2TilemapBuffer+
 			gAnimsOnLevelUpStatDisplayPositionLookup[stat_id];
@@ -317,6 +328,10 @@ void EkrLevelUp_InitStatsAndPutText(Proc_EkrLevelUp_t *proc){
 	} // for(int stat_id = 0; stat_id<8; stat_id++)
 	
 	// class name
+	struct TextHandle *th;
+	const char* str;
+	u16* map;
+	
 	th = &gUnknown_020176A0[8];
 	str = GetStringFromIndex(bu1->unit.pClassData->nameTextId);
 	map = gBG2TilemapBuffer + 0x1C0/2 + 3;
@@ -373,27 +388,27 @@ void EkrLevelUp_DrawNewStat(Proc_EkrLevelUp_t* proc, s16 stat_id){
 
 
 
-typedef int (*Get)(int,int,int,int,int);
+typedef int (*Get)(u32,int,int,int,int);
 int LocCalc_Default(void) {
 	return 0;
 }
-int LocCalc_0(int a,int b,int c,int d,int e){ 
-	return b + (c-b)* d /e;
+int LocCalc_0(u32 a,int b,int c,int d,int e){ 
+	return b + (c-b)* d/e;
 }
-int LocCalc_1(int a,int b,int c,int d,int e){ 
-	return b + d*d*(c-b) / (e*e);
+int LocCalc_1(u32 a,int b,int c,int d,int e){ 
+	return b + (c-b)* (d*d)/(e*e);
 }
-int LocCalc_2(int a,int b,int c,int d,int e){ 
-	return b + d*d*d*(c-b) / (e*e*e);
+int LocCalc_2(u32 a,int b,int c,int d,int e){ 
+	return b + (c-b)* (d*d*d)/(e*e*e);
 }
-int LocCalc_3(int a,int b,int c,int d,int e){ 
-	return b + d*d*d*d*(c-b)/(e*e*e);
+int LocCalc_3(u32 a,int b,int c,int d,int e){ 
+	return b + (c-b)* (d*d*d*d)/(e*e*e*e);
 }
-int LocCalc_4(int a,int b,int c,int d,int e){
-	return c - (e-d)*(e-d)*(c-b)/ (e*e);
+int LocCalc_4(u32 a,int b,int c,int d,int e){
+	return c - (c-b)* (e-d)*(e-d)/(e*e);
 }
-int LocCalc_5(int a,int b,int c,int d,int e){
-	return c - (e-d)*(e-d)*(e-d)*(c-b)/ (e*e);
+int LocCalc_5(u32 a,int b,int c,int d,int e){
+	return c - (c-b)* (e-d)*(e-d)*(e-d)/(e*e*e);
 }
 
 const Get LocCalcTable[] = {
@@ -407,11 +422,13 @@ const Get LocCalcTable[] = {
 
 
 // 0x8012DCC
-int Ekr_LocCalc(int cases, int b, int c, int d, int e){
-
+int Ekr_CommonCalc(u32 cases, int b, int c, int d, int e){
+	
+	// Here, this function cannot compile...
+	// "sp  neede :("
 	if( 0 == e )
 		return c;
-	else if ( cases > 5 )
+	if ( cases > 5 )
 		return 0;
 	else
 		return LocCalcTable[cases](cases,b,c,d,e);
@@ -420,34 +437,3 @@ int Ekr_LocCalc(int cases, int b, int c, int d, int e){
 
 
 
-
-
-
-
-// ===================
-// == FIT FOR C-LIB ==
-// ===================
-void sub_8073E8C(Proc_EkrLevelUp_t *proc){
-	EkrLevelUpProc_PutWindowOnScreen(proc);
-}
-
-void sub_80742F8(Proc_EkrLevelUp_t *proc){
-	EkrLevelUpProc_PutWindowOffScreen(proc);
-}
-
-void sub_80741CC(Proc_EkrLevelUp_t* proc){
-	EkrLevelUpProc_MainAnime(proc);
-}
-
-void sub_807352C(Proc_EkrLevelUp_t *proc){
-	EkrLevelUp_InitStatsAndPutText(proc);
-}
-
-int sub_8012DCC(int cases, int b, int c, int d, int e){
-	return Ekr_LocCalc(cases,b,c,d,e);
-}
-
-
-void sub_80738B8(Proc_EkrLevelUp_t* proc, s16 stat_id){
-	EkrLevelUp_DrawNewStat(proc, stat_id);
-} 

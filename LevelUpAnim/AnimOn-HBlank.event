@@ -1,0 +1,14 @@
+#include "src/AnimOn-HBlank.lyn.event"
+
+PUSH
+
+// a loop to update HBlank windows offset
+ORG $074834
+jumpToHack(EkrLevelUp_HBlankCallBack)
+
+// Init and loop for update windows offset
+ORG $074598
+jumpToHack(EkrLevelUp_UpdateHBlankRule)
+
+
+POP

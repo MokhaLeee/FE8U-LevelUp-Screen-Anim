@@ -48,6 +48,6 @@ StatNames:
 
 #include AnimOff.event
 #include AnimOn.event
-
+#include AnimOn-HBlank.event
 
 #endif // LEVEL_UP_ANIM

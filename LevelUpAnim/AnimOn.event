@@ -1,1 +1,40 @@
 #include "src/AnimOn.lyn.event"
+
+PUSH
+// Init Status and put text on BGs routine
+// called from proc-function: EkrLevelUpProc_InitLevelUpBox( from 0x8759350)
+ORG $07352C
+jumpToHack(EkrLevelUp_InitStatsAndPutText)
+
+
+// Proc-Loop to put Level-Up window (TSA+Text) on screen
+ORG $073E8C
+jumpToHack(EkrLevelUpProc_PutWindowOnScreen)
+
+
+// Proc-Loop to put Level-Up window (TSA+Text) off screen
+ORG $0742f9
+jumpToHack(EkrLevelUpProc_PutWindowOffScreen)
+
+
+// Proc-Loop to display each stat up APs 
+ORG $0741CC
+jumpToHack(EkrLevelUpProc_MainAnime)
+
+
+// Draw New Stats Text
+// Called in func: EkrLevelUpProc_MainAnime
+ORG $0738B8
+jumpToHack(EkrLevelUp_DrawNewStat)
+
+
+// a calc function
+// called on Put-on/off loop routine
+// this may be a common calc-functions for ekr or ap or AIS
+
+// however, this function  cannot compile...
+// "sp  needed"
+// :(
+ORG $012DCC
+// jumpToHack(Ekr_CommonCalc)
+POP

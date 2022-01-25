@@ -1,5 +1,3 @@
-
-#include "src/AnimOff.lyn.event"
 	
 
 /* 	
@@ -53,4 +51,19 @@ gMapAnimLevelUpStatLabelLocationTable:
 	WORD 0xFFFF 0 0
 	
 	
-	
+
+ALIGN 4
+#include "src/AnimOff.lyn.event"
+
+
+PUSH
+ORG $07F30C
+jumpToHack(MapAnimLevelUp_PutWindowOnScreen)
+
+ORG $07F354
+jumpToHack(MapAnimLevelUp_PutWindowOffScreen)
+
+ORG $07F39C
+jumpToHack(MapAnimLevelUp_MainAnime)
+
+POP
